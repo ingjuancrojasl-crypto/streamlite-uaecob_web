@@ -16,7 +16,7 @@ import matplotlib.colors as mcolors
 # ── Configuración de página ──────────────────────────────────────────────────
 st.set_page_config(
     page_title="UAECOB · Dashboard 2020",
-    page_icon="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Escudo_de_Bogot%C3%A1.svg/200px-Escudo_de_Bogot%C3%A1.svg.png",
+    page_icon="fire_engine",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -55,22 +55,29 @@ st.markdown("""
   [data-testid="stSidebar"] * { color: #dce8f5 !important; }
   [data-testid="stSidebar"] hr { border-color: #ffffff20; }
 
-  /* Radio buttons del sidebar */
+  /* Radio buttons del sidebar — estilo navegacion */
   [data-testid="stSidebar"] .stRadio > label { display: none; }
   [data-testid="stSidebar"] .stRadio [data-testid="stMarkdownContainer"] p {
     font-size: 0.78rem !important;
     color: #b0c8e8 !important;
-    font-weight: 400 !important;
   }
   [data-testid="stSidebar"] .stRadio label {
-    font-size: 0.82rem !important;
+    font-size: 0.80rem !important;
     font-weight: 500 !important;
-    padding: 6px 10px !important;
+    padding: 8px 12px !important;
     border-radius: 7px !important;
-    transition: background 0.15s !important;
+    border: 1px solid transparent !important;
+    transition: background 0.15s, border-color 0.15s !important;
+    margin-bottom: 2px !important;
+    letter-spacing: 0.2px !important;
   }
   [data-testid="stSidebar"] .stRadio label:hover {
     background: rgba(255,255,255,0.08) !important;
+    border-color: rgba(255,255,255,0.12) !important;
+  }
+  [data-testid="stSidebar"] [aria-checked="true"] {
+    background: rgba(50,102,173,0.35) !important;
+    border-color: rgba(50,102,173,0.6) !important;
   }
 
   /* ── KPI cards ── */
@@ -232,41 +239,42 @@ df = cargar_datos()
 # ══════════════════════════════════════════════════════════════════════════════
 # SIDEBAR — Profesional, sin emojis en opciones, sin filtros globales
 # ══════════════════════════════════════════════════════════════════════════════
+# ══════════════════════════════════════════════════════════════════════════════
+# SIDEBAR
+# ══════════════════════════════════════════════════════════════════════════════
 GRAFICAS = {
-    "Grafica 1  ·  Incidentes por mes":          "g1",
-    "Grafica 2  ·  Distribucion horaria":        "g3",
-    "Grafica 3  ·  Tiempo de respuesta":         "g5",
-    "Grafica 4  ·  Tipo de servicio":            "g6",
-    "Grafica 5  ·  Mapa de calor por localidad": "g10",
+    "01  —  Evolucion temporal":       "g1",
+    "02  —  Distribucion horaria":     "g3",
+    "03  —  Tiempo de respuesta":      "g5",
+    "04  —  Tipo de servicio":         "g6",
+    "05  —  Distribucion territorial": "g10",
 }
 
 with st.sidebar:
-    # Escudo — usando st.markdown con img tag evita el "0" de st.image
     st.markdown(
-        '<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/'
-        'Escudo_de_Bogot%C3%A1.svg/200px-Escudo_de_Bogot%C3%A1.svg.png" '
-        'width="52" style="display:block;margin-bottom:10px">',
-        unsafe_allow_html=True,
-    )
-    st.markdown(
-        '<div class="sb-brand">'
-        '<div class="sb-title">UAECOB · Bogotá D.C.</div>'
-        '<div class="sb-sub">Dashboard de Incidentes &nbsp;·&nbsp; Ene–Ago 2020</div>'
+        '<div style="padding:4px 0 14px 0;border-bottom:1px solid rgba(255,255,255,0.12);margin-bottom:18px;">'
+        '<div style="font-size:1.05rem;font-weight:700;color:#fff;letter-spacing:.5px;">UAECOB · Bogotá D.C.</div>'
+        '<div style="font-size:0.70rem;color:#8badd4;margin-top:3px;">Dashboard de Incidentes &nbsp;·&nbsp; Ene–Ago 2020</div>'
         '</div>',
         unsafe_allow_html=True,
     )
 
-    st.markdown('<div class="sb-section">Visualizaciones</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div style="font-size:0.60rem;font-weight:700;letter-spacing:1.4px;'
+        'text-transform:uppercase;color:#6a90b8;margin-bottom:10px;">Visualizaciones</div>',
+        unsafe_allow_html=True,
+    )
 
     grafica_sel_label = st.radio(
-        "Seleccionar grafica",
+        "nav",
         options=list(GRAFICAS.keys()),
         label_visibility="collapsed",
     )
     grafica_sel = GRAFICAS[grafica_sel_label]
 
     st.markdown(
-        '<div class="sb-footer">'
+        '<div style="font-size:0.68rem;color:#6a90b8;border-top:1px solid rgba(255,255,255,0.10);'
+        'padding-top:14px;margin-top:20px;line-height:1.7;">'
         'Fuente: Datos Abiertos Bogotá<br>'
         'UAECOB · Corte 31 agosto 2020<br><br>'
         'Autores:<br>'
@@ -363,7 +371,7 @@ SOURCE = (
 # ══════════════════════════════════════════════════════════════════════════════
 if grafica_sel == "g1":
     chart_header(
-        "Grafica 1 · Evolucion temporal",
+        "Grafica 01  ·  Evolucion temporal",
         "Incidentes por mes — UAECOB Bogotá 2020",
         "Volumen mensual de incidentes atendidos entre enero y agosto de 2020."
     )
@@ -425,7 +433,7 @@ if grafica_sel == "g1":
 # ══════════════════════════════════════════════════════════════════════════════
 elif grafica_sel == "g3":
     chart_header(
-        "Grafica 2 · Distribucion temporal",
+        "Grafica 02  ·  Distribucion temporal",
         "Incidentes por hora del día — UAECOB Bogotá 2020",
         "Patron horario de incidentes reportados entre las 00:00 y las 23:59 horas."
     )
@@ -492,7 +500,7 @@ elif grafica_sel == "g3":
 # ══════════════════════════════════════════════════════════════════════════════
 elif grafica_sel == "g5":
     chart_header(
-        "Grafica 3 · Capacidad operativa",
+        "Grafica 03  ·  Capacidad operativa",
         "Distribución del tiempo de respuesta — UAECOB Bogotá 2020",
         "Proporción de incidentes según rangos de tiempo de llegada (outliers > 120 min excluidos)."
     )
@@ -590,7 +598,7 @@ elif grafica_sel == "g5":
 # ══════════════════════════════════════════════════════════════════════════════
 elif grafica_sel == "g6":
     chart_header(
-        "Grafica 4 · Composicion operativa",
+        "Grafica 04  ·  Composicion operativa",
         "Top 10 tipos de servicio más frecuentes — UAECOB Bogotá 2020",
         "Clasificación de cada atención según el tipo de servicio prestado por la UAECOB."
     )
@@ -656,7 +664,7 @@ elif grafica_sel == "g6":
 # ══════════════════════════════════════════════════════════════════════════════
 elif grafica_sel == "g10":
     chart_header(
-        "Grafica 5 · Distribucion territorial",
+        "Grafica 05  ·  Distribucion territorial",
         "Incidentes por localidad de Bogotá D.C. — Mapa de calor",
         "El color más oscuro indica mayor concentración. Polígonos basados en límites administrativos oficiales."
     )
@@ -869,7 +877,7 @@ elif grafica_sel == "g10":
         fig_rank.update_layout(
             **layout_rank,
             title=dict(
-                text=f"<b>Grafica 5 · {metrica} por Localidad</b><br>"
+                text=f"<b>Ranking · {metrica} por Localidad</b><br>"
                      f"<sup>Total: {resumen_sorted[metrica].sum():,}</sup>",
                 x=0.5, xanchor="center", font=dict(size=12, color="#0d2b5e"),
             ),
